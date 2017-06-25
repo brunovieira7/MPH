@@ -12,8 +12,8 @@ public class StartManager : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-		if (!apiInfo.GetComponent<ApiInfo> ().canStartgame ())
-			return;
+//		if (!apiInfo.GetComponent<ApiInfo> ().canStartgame ())
+//			return;
 
 		if (Application.platform == RuntimePlatform.Android || Application.platform == RuntimePlatform.IPhonePlayer) {
 			if (Input.touchCount > 0) {
