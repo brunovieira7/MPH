@@ -3,10 +3,12 @@ using UnityEngine.UI;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine.Networking;
+using System.Linq;
+using System;
 
 public class GameManager : MonoBehaviour {
 
-	public GameObject[] seals;
+	public GameObject[] gems;
 	public Player player;
 	public Enemy enemy;
 	private string currentCast;
@@ -24,7 +26,8 @@ public class GameManager : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-		shuffleSeals ();
+		//populateGemsFull ();
+		shuffleGems ();
 		currentCast = "";
 	}
 
@@ -60,8 +63,8 @@ public class GameManager : MonoBehaviour {
 	}
 
 	void restartRound() {
-		destroySeals ();
-		shuffleSeals ();
+		destroyGems ();
+		shuffleGems ();
 		elapsedTime = 0f;
 		jutsuStage = true;
 		castingJutsuTimer = 0f;
@@ -96,6 +99,11 @@ public class GameManager : MonoBehaviour {
 	     var hit = Physics2D.OverlapPoint(touchPos);
 	     
 	     if (hit) {
+			Animator gem = hit.GetComponent<Animator> ();
+			gem.SetTrigger ("explode");
+			gem.SetInteger ("color", Int32.Parse (hit.GetComponent<SealClick> ().getSealCode ()));
+			Destroy (hit.gameObject, gem.GetCurrentAnimatorStateInfo(0).length + 0f); 
+
 			string sealCode = hit.GetComponent<SealClick> ().getSealCode ();
 			player.GetComponent<Player> ().castSeal ();
 
@@ -122,21 +130,68 @@ public class GameManager : MonoBehaviour {
 	     }
 	 }
 
-	void destroySeals() { 
+	private void checkTouchOld(Vector3 pos){
+		Vector3 wp = Camera.main.ScreenToWorldPoint(pos);
+		Vector2 touchPos = new Vector2(wp.x, wp.y);
+		var hit = Physics2D.OverlapPoint(touchPos);
+
+		if (hit) {
+
+
+			string sealCode = hit.GetComponent<SealClick> ().getSealCode ();
+			player.GetComponent<Player> ().castSeal ();
+
+			//Debug.Log ("got code " + sealCode);
+			currentCast = currentCast + sealCode;
+			Jutsu jutsu = player.GetComponent<Player> ().isCastSuccessful (currentCast);
+			if (jutsu != null) {
+				jutsuStage = false;
+				castingJutsu = jutsu;
+				//jutsu.playSound ();
+
+				if (jutsu.newBestTime (elapsedTime)) {
+					recordText.text = "New  Best  Time:  " + System.Math.Round (elapsedTime, 2);
+					recordText.enabled = true;
+				} 
+				else {
+					recordText.enabled = false;
+				}
+			}
+			//Debug.Log(hit.transform.gameObject.name);
+			//Debug.Log ("DOWNZZZ" + sealNum);
+
+
+		}
+	}
+
+
+	void destroyGems() { 
 		foreach (GameObject go in instanceSeals) {
 			Destroy (go);
 		}
 	}
 
-	void shuffleSeals() {
+	void populateGemsFull() {
+		GameObject[] gemsClone = (GameObject[])gems.Clone ();
+		gems = new GameObject[18];
+		List<GameObject> list1 = new List<GameObject>(gemsClone);
+		List<GameObject> listFin = new List<GameObject>(gemsClone);
+		listFin.AddRange (list1);
+		listFin.AddRange (list1);
+		Debug.Log ("1size : " + gemsClone.Length);
+
+		gems = listFin.ToArray ();
+	}
+
+	void shuffleGems() {
 		instanceSeals = new List<GameObject> ();
-		GameObject[] sealClone = (GameObject[])seals.Clone ();
+		GameObject[] sealClone = (GameObject[])gems.Clone ();
 
 		float y = 1.1f;
 		int x = -2;
 
-
-		for (int i = 0; i < seals.Length; i++) {
+		Debug.Log ("size : " + sealClone.Length);
+		for (int i = 0; i < gems.Length; i++) {
 			GameObject instance = getRandomSeal (sealClone);
 
 			List<GameObject> list = new List<GameObject>(sealClone);
@@ -160,6 +215,6 @@ public class GameManager : MonoBehaviour {
 	}
 
 	GameObject getRandomSeal(GameObject[] seals) {
-		return seals[Random.Range (0,seals.Length)];
+		return seals[UnityEngine.Random.Range (0,seals.Length)];
 	}
 }

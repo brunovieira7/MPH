@@ -44,8 +44,8 @@ public class Jutsu {
 	}
 
 	public void setRecordTimer() {
-		GameObject apiInfo = GameObject.Find ("ApiInfo");
-		recordTimer = apiInfo.GetComponent<ApiInfo> ().getJutsuTime ();
+		//GameObject apiInfo = GameObject.Find ("ApiInfo");
+		//recordTimer = apiInfo.GetComponent<ApiInfo> ().getJutsuTime ();
 	}
 
 	public bool newBestTime(float newTimer) {
@@ -63,6 +63,10 @@ public class Jutsu {
 	}
 		
 	private void TaskOnClick(float newTimer) {
+
+	}
+
+	private void TaskOnClickApiOld(float newTimer) {
 		try	{
 			string ourPostData = "{\"id\":"+ id +", \"time\": " + newTimer + " }";
 			Dictionary<string,string> headers = new Dictionary<string, string>();

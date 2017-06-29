@@ -1,9 +1,9 @@
+﻿
 Microsoft Visual Studio Solution File, Format Version 11.00
-# Visual Studio 2008
-
-Project("{886E8F38-73E1-B57C-2049-968ED8444AB7}") = "MPH", "Assembly-CSharp-firstpass.csproj", "{7E400455-21BC-2ECD-0E3E-F004423CD73B}"
+# Visual Studio 2010
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MPH", "Assembly-CSharp-firstpass.csproj", "{7E400455-21BC-2ECD-0E3E-F004423CD73B}"
 EndProject
-Project("{886E8F38-73E1-B57C-2049-968ED8444AB7}") = "MPH", "Assembly-CSharp.csproj", "{7983ABF2-671E-04FC-1CC0-95F6F735AD13}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MPH", "Assembly-CSharp.csproj", "{7983ABF2-671E-04FC-1CC0-95F6F735AD13}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
